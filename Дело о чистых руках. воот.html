@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Дело о чистых руках</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#e8eef0;--card:#fff;--ink:#14213d;--mute:#5b6b7c;--uv:#6a3fd0;--ok:#1d7a4d;--bad:#b3392f;--line:#c4d0d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10171f;--card:#1a2430;--ink:#e6edf3;--mute:#93a4b5;--uv:#a78bfa;--ok:#4cc38a;--bad:#f0746a;--line:#2d3b4a}}
+:root[data-theme="dark"]{--bg:#10171f;--card:#1a2430;--ink:#e6edf3;--mute:#93a4b5;--uv:#a78bfa;--ok:#4cc38a;--bad:#f0746a;--line:#2d3b4a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Spectral,Georgia,serif;margin:.2em 0;line-height:1.2}
+#app{max-width:560px;margin:0 auto;padding:14px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--mute);margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
+.btn{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;margin:8px 0;cursor:pointer}
+.btn:focus-visible{outline:3px solid var(--uv)}
+.btn.main{background:var(--uv);border-color:var(--uv);color:#fff;text-align:center;font-weight:600}
+.btn.ok{border-color:var(--ok)}.btn.bad{border-color:var(--bad)}
+.btn[disabled]{opacity:.55}
+.q{color:var(--uv);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:15px}td{padding:6px 4px;border-bottom:1px solid var(--line)}td:last-child{text-align:right;font-weight:600}
+.mute{color:var(--mute);font-size:14px}.stars{font-size:26px;color:var(--uv);letter-spacing:2px}
+.dishes{display:flex;gap:8px;flex-wrap:wrap}.dish{width:96px;text-align:center;font-size:12px}
+.dish svg{width:96px;height:96px}
+.pat{letter-spacing:2px}
+.big{font-size:28px}
+</style></head><body><div id="app"></div>
+<script>
+var CASES=[
+{y:"Вена, 1847",t:"Дело первой клиники",br:"Венская городская больница. В Первой акушерской клинике от родильной горячки умирает каждая десятая роженица. Во Второй — гораздо реже. Вам предстоит выяснить почему.",
+ppl:[["Акушерка Второй клиники","Мы принимаем роды сами. Покойников не вскрываем — это дело студентов."],["Студент-медик","Утром у нас секционная, потом сразу обход родильниц. Руки? Вытираем о фартук."],["Проф. Клейн","Виновны миазмы и теснота. Прошу не искать в моей клинике то, чего нет."]],
+lab:["Смертность, 1841–1846",[["1-я клиника (врачи, студенты)","9,9%"],["2-я клиника (акушерки)","3,4%"],["Апрель 1847, до хлорной воды","18,3%"],["Июнь 1847, после мытья рук","2,2%"]],"В марте 1847 умер Я. Коллечка: порез скальпелем при вскрытии, затем болезнь, схожая с родильной горячкой. С 15 мая Земмельвейс ввёл мытьё рук хлорной известью."],
+ver:[["Миазмы и теснота палат",0,"Условия в обеих клиниках схожи, а смертность различается. Миазмы не объясняют разницу."],["«Трупные частицы» на руках студентов и врачей",1,"Верно. Руки переносили материал от секций к роженицам. Хлорная известь снизила смертность в разы."],["Страх рожениц перед священником",0,"Гипотеза проверялась, но на смертность не повлияла."]]},
+{y:"Франция, 1861–1884",t:"Дело мутного бульона",br:"Лаборатория Пастера. Мясной бульон портится на глазах. Учёные спорят: микробы приходят извне или зарождаются в самом бульоне.",
+ppl:[["Ф. Пуше, оппонент","Жизнь возникает из самой материи. Воздух тут ни при чём."],["Лаборант Пастера","Мы вытянули горлышко колбы лебединой шеей. Воздух входит, пыль оседает в изгибе."],["Врач-хирург","Нагревание и фильтрация бульона дают чистый результат. Любопытно, а в ране ведь тоже бывает гной."]],
+lab:["Опыт с колбами (1861–1862)",[["Прямое горлышко","мутнеет за дни"],["Лебединая шея, бульон кипячён","стерилен месяцами"],["Шею отломили","мутнеет быстро"],["1876–1884: Кох описал возбудителей сибирки и туберкулёза","микробная теория"]],"Пастер доказал, что микроорганизмы приходят извне. Кох позже сформулировал критерии связи микроба с болезнью."],
+ver:[["Самозарождение микробов в бульоне",0,"Опыт опровергает это: без попадания пыли бульон остаётся стерильным."],["Микробы попадают извне с пылью и воздухом",1,"Верно. Из этого следует, что инфекция в ране тоже имеет внешний источник, в том числе руки."],["Бульон портится из-за температуры",0,"Кипячёный бульон при тех же условиях не портился."]]},
+{y:"Глазго, 1865–1867",t:"Дело нагноения ран",br:"Королевский лазарет. После операций и открытых переломов больные умирают от гнойных осложнений. Хирурги гордятся сюртуками в крови: это знак опыта.",
+ppl:[["Хирург старой школы","Гной бывает «благородным». Руки не мою: что они мне сделают?"],["Дж. Листер","Я прочёл Пастера. Если микробы попадают в рану извне, их нужно убить: карболовой кислотой."],["Операционная сестра","Распыляем карболку, обрабатываем инструменты и руки. Кожа потом сильно сохнет."]],
+lab:["Ампутации, Листер",[["До антисептики: умерло","16 из 35 (46%)"],["С карболовой кислотой: умерло","6 из 40 (15%)"],["Метод","обработка ран, инструментов, рук, спрей"]],"Листер опубликовал результаты в 1867 году. Это начало антисептической хирургии."],
+ver:[["Вина «ослабленного организма»",0,"Больные те же, а исходы стали заметно лучше после обработки."],["Микробы в ране. Помогает антисептик",1,"Верно. Антисептика убивает микробы в ране и на предметах."],["Плохой воздух в палатах",0,"Миазмы объясняют не больше, чем в Вене. Решает контакт."]]},
+{y:"Германия и США, 1886–1897",t:"Дело едкой карболки",br:"Карболка спасает больных, но разъедает кожу хирургов и ткани. Нужен другой подход: не убивать микробов в ране, а не допускать их туда.",
+ppl:[["Сестра К. Хэмптон","От растворов у меня язвы на руках. Доктор Холстед заказал для меня резиновые перчатки."],["Э. фон Бергман","Теперь мы стерилизуем паром бельё, инструменты и перевязочный материал."],["Я. Микулич","Хирург должен закрывать рот и нос марлевой маской: слюна несёт микробы."]],
+lab:["Развитие асептики",[["1886","паровой стерилизатор (Бергман, Шиммельбуш)"],["1889–1890","резиновые перчатки (Холстед)"],["1897","марлевая маска (Микулич)"]],"Асептика — комплекс мер, исключающий попадание микробов: стерильный инструментарий, одежда, перчатки, маска."],
+ver:[["Усилить концентрацию карболки",0,"Это увеличит вред для кожи и тканей, а асептика исключает сам микроб."],["Перейти на асептику: стерильность, перчатки, маска",1,"Верно. Не убивать микробов в ране, а не допускать их."],["Отказаться от обработки рук",0,"Руки остаются главным путём передачи, их нужно обрабатывать."]]},
+{y:"Наши дни",t:"Дело отделения реанимации",br:"В отделении выросла частота ИСМП (инфекций, связанных с оказанием медицинской помощи). Антибиотики не помогают, возбудитель устойчив. Начинаем с лаборатории.",
+ppl:[["Медсестра","Раковина в конце коридора. Спиртовой антисептик на посту, а не у кровати."],["Врач-реаниматолог","Бывает, что надеваю перчатки и не снимаю между пациентами."],["Эпидемиолог ВОЗ","Средняя приверженность гигиене рук около 40%. ИСМП развиваются примерно у 7% больных в странах с высоким доходом и у 15% в остальных."]],
+lab:["EXP",null,"Гигиена рук по ВОЗ: 5 моментов. До контакта с пациентом, перед асептической процедурой, после риска контакта с жидкостями, после контакта с пациентом, после контакта с его окружением."],
+ver:[["Назначить больше антибиотиков",0,"Это усилит устойчивость микробов и не решит проблему передачи."],["Антисептик в точке оказания помощи + обучение 5 моментам",1,"Верно. Рекомендации ВОЗ 2009 и СанПиН 3.3686-21: обработка рук спиртовым антисептиком (по ГОСТ Р ЕН 1500: 3 мл, 30 с) и обучение персонала."],["Запретить посещения",0,"Контактная передача идёт через персонал, запрет посещений не снимет основной источник."]]}
+];
+var STEPS=["Ладонь о ладонь","Тыл ладони","Межпальцевые промежутки","Тыльная сторона пальцев (замок)","Большие пальцы","Кончики пальцев"];
+var RANKS=["Стажёр","Лаборант-эпидемиолог","Эпидемиолог","Главный санитарный врач"];
+var PT=[["#f0c9a4","#5a3b2a","#7a8fb0",3],["#e2b48c","#2b2b2b","#5b4636",0],["#f0c9a4","#aaa","#222",1],
+["#f0c9a4","#666","#3c3c5a",1],["#e2b48c","#3a2a1f","#e9eef0",0],["#c98f6a","#444","#8a3b3b",2],
+["#f0c9a4","#999","#6b2a2a",1],["#f0c9a4","#8a8a8a","#2b2b3a",1],["#e2b48c","#4a3020","#7a8fb0",3],
+["#f0c9a4","#6a4a2a","#7a8fb0",3],["#e2b48c","#bbb","#e9eef0",1],["#c98f6a","#333","#e9eef0",4],
+["#e2b48c","#b36b3a","#2f7f8f",0],["#f0c9a4","#222","#2f7f8f",4],["#c98f6a","#888","#e9eef0",2]];
+var ACC=["",'<path d="M16 25c1 9 15 9 16 0-3 3-13 3-16 0z" fill="#H"/>','<g fill="none" stroke="#222" stroke-width="1.3"><circle cx="20.5" cy="22" r="3"/><circle cx="27.5" cy="22" r="3"/><path d="M23.5 22h1"/></g>','<path d="M15 14l3-6h12l3 6z" fill="#fff" stroke="#999" stroke-width=".6"/><path d="M24 9v3M22.5 10.5h3" stroke="#c33"/>','<path d="M16 24h16v6q-8 3-16 0z" fill="#e8f1f4" stroke="#9ab"/>'];
+function pt(n){var d=PT[n];return '<svg viewBox="0 0 48 48" width="48" height="48" style="flex:none"><circle cx="24" cy="24" r="24" fill="#cfd9de"/><path d="M6 48c0-12 8-16 18-16s18 4 18 16z" fill="'+d[2]+'"/><circle cx="24" cy="22" r="9" fill="'+d[0]+'"/><path d="M14.5 21c0-9 6-11 9.5-11s9.5 2 9.5 11c-3-4-6-5-9.5-5s-6.5 1-9.5 5z" fill="'+d[1]+'"/>'+ACC[d[3]].replace("#H",d[1])+'</svg>'}
+var G='<rect width="320" height="130" fill="#dbe5e8"/>',T='font-size="10" fill="#14213d" font-family="sans-serif"';
+var SC=[
+G+'<rect y="95" width="320" height="35" fill="#b9c7cc"/><rect x="20" y="15" width="40" height="50" fill="#bfe0ee" stroke="#789" stroke-width="3"/><path d="M40 15v50M20 40h40" stroke="#789" stroke-width="2"/><g fill="#fff" stroke="#789" stroke-width="2"><rect x="95" y="72" width="70" height="22"/><rect x="185" y="72" width="70" height="22"/></g><rect x="97" y="64" width="20" height="10" rx="5" fill="#e9d9c0"/><rect x="187" y="64" width="20" height="10" rx="5" fill="#e9d9c0"/><ellipse cx="288" cy="92" rx="22" ry="7" fill="#dfeef2" stroke="#789"/><rect x="274" y="98" width="28" height="18" fill="#9ab"/><text x="268" y="84" '+T+'>Ca(OCl)₂</text><text x="95" y="120" '+T+'>Вена, 1847. Первая клиника</text>',
+G+'<rect y="100" width="320" height="30" fill="#8b6b4a"/><path d="M65 100h60l-15-30V40H80v30z" fill="#e8d28a" stroke="#456" stroke-width="2"/><g fill="#8b6b3a"><circle cx="85" cy="92" r="2"/><circle cx="100" cy="85" r="2"/><circle cx="110" cy="95" r="2"/></g><path d="M195 100h60l-15-30V58" fill="#dff0f5" stroke="#456" stroke-width="2"/><path d="M225 70V58q0-22 22-22t22 22" fill="none" stroke="#456" stroke-width="3"/><text x="62" y="120" '+T+'>прямое горлышко</text><text x="190" y="120" '+T+'>лебединая шея</text>',
+G+'<rect y="105" width="320" height="25" fill="#9a8f88"/><rect x="40" y="75" width="110" height="14" fill="#fff" stroke="#789" stroke-width="2"/><path d="M50 89v16M140 89v16" stroke="#789" stroke-width="3"/><ellipse cx="95" cy="70" rx="38" ry="7" fill="#e0b896"/><path d="M215 105l15-40 15 40M230 65V50" stroke="#456" stroke-width="3" fill="none"/><circle cx="230" cy="40" r="12" fill="#b87333"/><path d="M220 40l-50 15" stroke="#456" stroke-width="3"/><g fill="#6a3fd0" opacity=".6"><circle cx="164" cy="58" r="2"/><circle cx="154" cy="62" r="2.5"/><circle cx="145" cy="60" r="2"/><circle cx="136" cy="66" r="2"/></g><text x="190" y="120" '+T+'>карболовый спрей</text>',
+G+'<rect y="105" width="320" height="25" fill="#b9c7cc"/><rect x="30" y="45" width="90" height="58" rx="10" fill="#9ab" stroke="#456" stroke-width="3"/><circle cx="75" cy="74" r="14" fill="#dfeef2" stroke="#456" stroke-width="3"/><path d="M60 45c-8-14 8-14 0-26M85 45c-8-14 8-14 0-26" stroke="#9ab" stroke-width="3" fill="none"/><g fill="#e8c9a0" stroke="#a88" stroke-width="2"><rect x="170" y="62" width="38" height="40" rx="8"/><rect x="172" y="42" width="7" height="26" rx="3"/><rect x="182" y="38" width="7" height="28" rx="3"/><rect x="192" y="42" width="7" height="26" rx="3"/><rect x="201" y="48" width="7" height="20" rx="3"/></g><path d="M240 70h50v18q-25 12-50 0z" fill="#e8f1f4" stroke="#789" stroke-width="2"/><text x="40" y="122" '+T+'>пар</text><text x="165" y="122" '+T+'>перчатки</text><text x="248" y="106" '+T+'>маска</text>',
+G+'<rect y="105" width="320" height="25" fill="#c5d0d4"/><rect x="25" y="70" width="70" height="30" fill="#cfd9de" stroke="#789" stroke-width="2"/><path d="M60 70V48h20" stroke="#789" stroke-width="3" fill="none"/><rect x="130" y="45" width="22" height="40" rx="4" fill="#2f7f8f"/><rect x="136" y="60" width="10" height="8" fill="#fff"/><rect x="170" y="78" width="95" height="18" fill="#fff" stroke="#789" stroke-width="2"/><rect x="172" y="70" width="20" height="10" rx="5" fill="#e9d9c0"/><rect x="262" y="28" width="44" height="30" rx="3" fill="#123"/><path d="M267 45l6-8 5 14 5-10 6 4 6 0 6-6" stroke="#4cc38a" fill="none" stroke-width="1.5"/><text x="105" y="122" '+T+'>антисептик у кровати</text>'];
+function scn(i){return '<svg viewBox="0 0 320 130" style="width:100%;border-radius:8px;display:block;margin-bottom:8px" role="img">'+SC[i]+'</svg>'}
+var S,AC,MU,mOn=false,mNode;
+function $(h){document.getElementById("app").innerHTML=h}
+function ld(){try{return JSON.parse(localStorage.getItem("ruki"))||{}}catch(e){return{}}}
+function sv(o){try{localStorage.setItem("ruki",JSON.stringify(o))}catch(e){}}
+function beep(f,d,t){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
+function music(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(mOn){mNode.forEach(function(n){n.stop()});mOn=false;return render()}
+mNode=[110,164.8].map(function(f){var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.025;o.connect(g);g.connect(AC.destination);o.start();return o});mOn=true;render()}catch(e){}}
+function top(){var p="";for(var i=0;i<5;i++)p+=i<5-S.lost?"●":"○";return '<div class="top"><span>'+(S.c<5?"Дело "+(S.c+1)+" из 5":"")+'</span><span class="pat" title="Пациенты">Пациенты '+p+'</span><button class="btn" style="width:auto;margin:0;padding:4px 8px" onclick="music()">'+(mOn?"Музыка выкл":"Музыка вкл")+'</button></div>'}
+function start(){S={c:-1,st:0,lost:0,asked:{},tried:{},ok:0,log:[]};render()}
+function render(){
+if(S.c<0){var b=ld();return $('<div class="card"><h1>Дело о чистых руках</h1><p>Вы — молодой эпидемиолог. Пять расследований в разных эпохах: от венской клиники 1847 года до современной реанимации. Злодей — привычки персонала. За ошибку в версии теряете пациента.</p><p class="mute">Игра на 15–25 минут. Прогресс сохраняется на устройстве.'+(b.best?'<br>Лучший результат: <span class="stars">'+"★".repeat(b.best)+"☆".repeat(5-b.best)+'</span> · '+RANKS[Math.min(3,Math.max(0,b.best-2))]:'')+'</p><button class="btn main" onclick="S.c=0;render()">Начать расследование</button></div>')}
+if(S.c>=5)return end();
+var c=CASES[S.c],h=top();
+if(S.st==0)h+='<div class="card">'+scn(S.c)+'<h2>'+c.t+'</h2><div class="mute">'+c.y+'</div><p>'+c.br+'</p></div><button class="btn main" onclick="S.st=1;render()">Допросить свидетелей</button>';
+else if(S.st==1){h+='<h3>Допрос</h3>';c.ppl.forEach(function(p,i){var k=S.c+"_"+i,a=S.asked[k];h+='<button class="btn" style="display:flex;gap:10px;align-items:flex-start" onclick="ask(\''+k+'\')">'+pt(S.c*3+i)+'<div>'+p[0]+(a?'<div class="mute" style="margin-top:6px">'+p[1]+'</div>':'<div class="q">Задать вопрос</div>')+'</div></button>'});
+var n=c.ppl.filter(function(p,i){return S.asked[S.c+"_"+i]}).length;h+='<button class="btn main" '+(n<2?'disabled':'')+' onclick="S.st=2;render()">К лаборатории'+(n<2?' (опросите минимум двоих)':'')+'</button>'}
+else if(S.st==2){if(c.lab[0]=="EXP")return exp(h,c);h+='<div class="card"><h3>Лаборатория: '+c.lab[0]+'</h3><table>'+c.lab[1].map(function(r){return"<tr><td>"+r[0]+"</td><td>"+r[1]+"</td></tr>"}).join("")+'</table><p class="mute">'+c.lab[2]+'</p></div><button class="btn main" onclick="S.st=4;render()">Выбрать версию</button>'}
+else if(S.st==3)return game(h);
+else if(S.st==4){h+='<h3>Ваша версия</h3>';c.ver.forEach(function(v,i){h+='<button class="btn" onclick="pick('+i+')">'+v[0]+'</button>'})}
+else if(S.st==5){var v=S.v;h+='<div class="card"><h3 style="color:var(--'+(v[1]?'ok':'bad')+')">'+(v[1]?"Версия верна":"Версия неверна. Пациент потерян")+'</h3><p>'+v[2]+'</p></div><button class="btn main" onclick="nextCase()">'+(S.c<4?"К следующему делу":"К итогам")+'</button>'}
+$(h)}
+function ask(k){S.asked[k]=1;beep(520,.15);render()}
+function exp(h,c){var T=[["Без обработки",120,"#a05a2c"],["Мытьё мылом, 40–60 с",35,"#c28a3a"],["Спиртовой антисептик, 30 с",3,"#d6c27a"]];
+h+='<div class="card"><h3>Эксперимент: отпечаток пальцев на чашке Петри</h3><p class="mute">Выберите способ обработки, посмотрите на рост колоний. Значения условные, соотношение отражает данные исследований.</p><div class="dishes">';
+T.forEach(function(t,i){var d="";if(S.tried[i]){for(var j=0;j<t[1];j++){var a=j*2.4,r=Math.sqrt(j/t[1])*40;d+='<circle cx="'+(48+r*Math.cos(a)).toFixed(1)+'" cy="'+(48+r*Math.sin(a)).toFixed(1)+'" r="1.7" fill="'+t[2]+'"/>'}}
+h+='<div class="dish"><svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="46" fill="#f2e3b3" opacity=".35" stroke="#888"/>'+d+'</svg><button class="btn" style="text-align:center;padding:6px" onclick="S.tried['+i+']=1;beep('+(300+i*150)+',.2);render()">'+t[0]+'</button>'+(S.tried[i]?'<b>~'+t[1]+' КОЕ</b>':'')+'</div>'});
+var all=S.tried[0]&&S.tried[1]&&S.tried[2];h+='</div><p class="mute">'+c.lab[2]+'</p></div><button class="btn main" '+(all?'':'disabled')+' onclick="S.st=3;S.ord=[];S.err=0;render()">'+(all?'К мини-игре: техника ВОЗ':'Проверьте все три способа')+'</button>';$(h)}
+function game(h){var ord=S.ord;h+='<div class="card"><h3>Техника обработки рук (ВОЗ)</h3><p class="mute">Нажимайте этапы в правильном порядке.</p>';
+STEPS.map(function(s,i){return[s,i]}).sort(function(a,b){return((a[1]*7+3)%6)-((b[1]*7+3)%6)}).forEach(function(p){var d=ord.indexOf(p[1])>=0;h+='<button class="btn '+(d?'ok':'')+'" '+(d?'disabled':'')+' onclick="gs('+p[1]+')">'+(d?(ord.indexOf(p[1])+1)+". ":"")+p[0]+'</button>'});$(h+'</div>')}
+function gs(i){if(i==S.ord.length){S.ord.push(i);beep(660,.12)}else{beep(150,.3,"sawtooth");if(!S.err){S.err=1;S.lost++;S.log.push("Ошибка в технике: потерян пациент")}}
+if(S.ord.length==6){S.st=4;beep(880,.3)}render()}
+function pick(i){var v=CASES[S.c].ver[i];S.v=v;if(v[1]){S.ok++;beep(740,.3)}else{S.lost++;beep(150,.4,"sawtooth")}S.st=5;render()}
+function nextCase(){S.c++;S.st=0;S.asked={};render()}
+function end(){var st=Math.max(1,Math.min(5,5-S.lost)),sv0=ld();if((sv0.best||0)<st){sv0.best=st;sv(sv0)}
+var E=st==5?"Безупречное расследование. Все пациенты спасены, а мытьё рук стало правилом отделения.":st>=3?"Часть пациентов потеряна, но вы нашли главное звено цепи — руки.":"Много потерь. Вернитесь к делам Земмельвейса и Листера и попробуйте ещё раз.";
+$('<div class="card"><h1>Итоги</h1><div class="stars big">'+"★".repeat(st)+"☆".repeat(5-st)+'</div><h2>'+RANKS[Math.min(3,Math.max(0,st-2))]+'</h2><p>Спасено пациентов: '+st+' из 5. Верных версий: '+S.ok+' из 5.</p><p>'+E+'</p><p class="mute">Главный вывод: цепь передачи прерывается на руках. Путь: мытьё с хлорной водой, затем карболка, асептика, спиртовые антисептики.</p><button class="btn main" onclick="start()">Сыграть заново</button></div>')}
+start();
+</script></body></html>
